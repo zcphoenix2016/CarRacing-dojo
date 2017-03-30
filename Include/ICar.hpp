@@ -2,14 +2,14 @@
 
 enum ENGINEQUALITY
 {
-    HIGH,
-    LOW
+    ENGINEQUALITY_HIGH,
+    ENGINEQUALITY_LOW
 };
 
 enum HANDLING
 {
-    GOOD,
-    BAD
+    HANDLING_GOOD,
+    HANDLING_BAD
 };
 
 class ICar

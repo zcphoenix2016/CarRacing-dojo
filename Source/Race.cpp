@@ -23,18 +23,18 @@ vector<int> Race::run(const vector<ITeam *>& p_teams, const Track& p_track)
 
 bool Race::validate(const ICar& p_car)
 {
-    return ( 100 == p_car.statusOfTire() and
+    return (100 == p_car.statusOfTire() and
              100 == p_car.statusOfEngine() and
              100 == p_car.statusOfSuspension());
 }
 
 float Race::calcTime(const ICar& p_car, const ITrack& p_track)
 {
-    if( HIGH == p_car.qualityOfEngine())
+    if (ENGINEQUALITY_HIGH == p_car.qualityOfEngine())
     {
-        if (GOOD == p_car.handling())
+        if (HANDLING_GOOD == p_car.handling())
         {
-            return p_track.getLength()/100*5 + p_track.getTurns()*0.5;
+            return p_track.getLength() / 100 * 5 + p_track.getTurns()* 0.5;
         }
         else
         {

@@ -37,8 +37,8 @@ TEST(CarRacingTestSuite, testRaceTimeForCarWithHighEngineWithGoodHandlingOnTrack
     Race l_race;
     const float l_expectTime = 28.0;
 
-    EXPECT_CALL(l_carMock, qualityOfEngine()).WillOnce(Return(HIGH));
-    EXPECT_CALL(l_carMock, handling()).WillOnce(Return(GOOD));
+    EXPECT_CALL(l_carMock, qualityOfEngine()).WillOnce(Return(ENGINEQUALITY_HIGH));
+    EXPECT_CALL(l_carMock, handling()).WillOnce(Return(HANDLING_GOOD));
     EXPECT_CALL(l_trackMock, getLength()).WillOnce(Return(500));
     EXPECT_CALL(l_trackMock, getTurns()).WillOnce(Return(6));
 
