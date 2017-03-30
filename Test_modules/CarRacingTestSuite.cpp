@@ -45,3 +45,16 @@ TEST_F(CarRacingTestSuite, testRaceTimeForCarWithHighEngineWithGoodHandlingOnTra
     ASSERT_EQ(l_expectTime, m_race.calcTime(m_carMock, m_trackMock));
 }
 
+
+TEST_F(CarRacingTestSuite, testRaceTimeForCarWithLowEngineWithGoodHandlingOnTrack1)
+{
+    const float l_expectTime = 33.0;
+
+    EXPECT_CALL(m_carMock, qualityOfEngine()).WillOnce(Return(ENGINEQUALITY_LOW));
+    EXPECT_CALL(m_carMock, handling()).WillOnce(Return(HANDLING_GOOD));
+    EXPECT_CALL(m_trackMock, getLength()).WillOnce(Return(500));
+    EXPECT_CALL(m_trackMock, getTurns()).WillOnce(Return(6));
+
+    ASSERT_EQ(l_expectTime, m_race.calcTime(m_carMock, m_trackMock));
+}
+

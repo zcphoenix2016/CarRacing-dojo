@@ -43,6 +43,10 @@ float Race::calcTime(const ICar& p_car, const ITrack& p_track)
     }
     else
     {
+        if (HANDLING_GOOD == p_car.handling())
+        {
+            return p_track.getLength() / 100 * 6 + p_track.getTurns()* 0.5;
+        }
     }
     return 0.0;
 }
