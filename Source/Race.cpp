@@ -30,8 +30,8 @@ bool Race::validate(const ICar& p_car)
 
 float Race::calcTime(const ICar& p_car, const ITrack& p_track)
 {
-    int l_timeOfLength = (ENGINEQUALITY_HIGH == p_car.qualityOfEngine()) ? 5 : 6;
-    float l_timeOfTurns = (HANDLING_GOOD == p_car.handling()) ? 0.5 : 1.5;
+    int l_timeOfLength = (EngineQuality::High == p_car.qualityOfEngine()) ? 5 : 6;
+    float l_timeOfTurns = (Handling::Good == p_car.handling()) ? 0.5 : 1.5;
 
     return p_track.getLength() / 100 * l_timeOfLength + p_track.getTurns()* l_timeOfTurns;
 }

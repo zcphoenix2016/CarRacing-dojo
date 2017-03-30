@@ -1,15 +1,15 @@
 #pragma once
 
-enum ENGINEQUALITY
+enum class EngineQuality
 {
-    ENGINEQUALITY_HIGH,
-    ENGINEQUALITY_LOW
+    High,
+    Low
 };
 
-enum HANDLING
+enum class Handling
 {
-    HANDLING_GOOD,
-    HANDLING_BAD
+    Good,
+    Bad
 };
 
 class ICar
@@ -19,6 +19,6 @@ public:
     virtual int statusOfTire() const = 0;
     virtual int statusOfEngine() const = 0;
     virtual int statusOfSuspension() const = 0;
-    virtual ENGINEQUALITY qualityOfEngine() const = 0;
-    virtual HANDLING handling() const = 0;
+    virtual EngineQuality qualityOfEngine() const = 0;
+    virtual Handling handling() const = 0;
 };

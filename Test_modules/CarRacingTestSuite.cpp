@@ -41,8 +41,8 @@ struct TrackParams
 
 struct RaceCalcTimeTestParams
 {
-    ENGINEQUALITY engineQuality;
-    HANDLING      handling;
+    EngineQuality engineQuality;
+    Handling      handling;
     TrackParams   trackParams;
     float         expectedTime;
 };
@@ -55,14 +55,14 @@ class RaceCalcTimeTestSuite
 INSTANTIATE_TEST_CASE_P(test_RaceCalcTimeWithDifferentParams,
                         RaceCalcTimeTestSuite,
                         ::testing::Values(
-                            RaceCalcTimeTestParams{ENGINEQUALITY_HIGH, HANDLING_GOOD, {500, 6}, 28.0},
-                            RaceCalcTimeTestParams{ENGINEQUALITY_LOW, HANDLING_GOOD, {500, 6}, 33.0},
-                            RaceCalcTimeTestParams{ENGINEQUALITY_HIGH, HANDLING_BAD, {500, 6}, 34.0},
-                            RaceCalcTimeTestParams{ENGINEQUALITY_LOW, HANDLING_BAD, {500, 6}, 39.0},
-                            RaceCalcTimeTestParams{ENGINEQUALITY_HIGH, HANDLING_GOOD, {1000, 3}, 51.5},
-                            RaceCalcTimeTestParams{ENGINEQUALITY_LOW, HANDLING_GOOD, {1000, 3}, 61.5},
-                            RaceCalcTimeTestParams{ENGINEQUALITY_HIGH, HANDLING_BAD, {1000, 3}, 54.5},
-                            RaceCalcTimeTestParams{ENGINEQUALITY_LOW, HANDLING_BAD, {1000, 3}, 64.5}));
+                            RaceCalcTimeTestParams{EngineQuality::High, Handling::Good, {500, 6}, 28.0},
+                            RaceCalcTimeTestParams{EngineQuality::Low, Handling::Good, {500, 6}, 33.0},
+                            RaceCalcTimeTestParams{EngineQuality::High, Handling::Bad, {500, 6}, 34.0},
+                            RaceCalcTimeTestParams{EngineQuality::Low, Handling::Bad, {500, 6}, 39.0},
+                            RaceCalcTimeTestParams{EngineQuality::High, Handling::Good, {1000, 3}, 51.5},
+                            RaceCalcTimeTestParams{EngineQuality::Low, Handling::Good, {1000, 3}, 61.5},
+                            RaceCalcTimeTestParams{EngineQuality::High, Handling::Bad, {1000, 3}, 54.5},
+                            RaceCalcTimeTestParams{EngineQuality::Low, Handling::Bad, {1000, 3}, 64.5}));
 
 TEST_P(RaceCalcTimeTestSuite, RaceCalcTimeInDifferentParams)
 {
