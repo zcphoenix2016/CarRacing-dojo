@@ -1,14 +1,15 @@
 #pragma once
 
 #include <vector>
-
-using namespace std;
+#include "ICar.hpp"
 
 class ITeam;
-class Track;
+
+using namespace std;
 
 class Race
 {
 public:
-    vector<int> run(const vector<ITeam *>& p_teams, const Track& p_track);
+    //vector<int> run(const vector<ITeam *>& p_teams, const Track& p_track);
+    bool validate(const ICar& p_car);
 };
