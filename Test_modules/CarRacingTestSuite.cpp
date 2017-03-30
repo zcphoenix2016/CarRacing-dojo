@@ -3,8 +3,13 @@
 #include "Race.hpp"
 #include "CarMock.hpp"
 #include "TrackMock.hpp"
+#include <vector>
+#include "TeamMock.hpp"
+#include <functional>
 
 using ::testing::Return;
+using ::testing::ReturnRef;
+using namespace std;
 
 class CarRacingTestSuite : public ::testing::Test
 {
@@ -74,4 +79,36 @@ TEST_P(RaceCalcTimeTestSuite, RaceCalcTimeInDifferentParams)
     ASSERT_EQ(GetParam().expectedTime, m_race.calcTime(m_carMock, m_trackMock));
 }
 
+TEST_F(CarRacingTestSuite, TeamWithLessTimeShouldWin)
+{
+    CarMock l_car1;
+    CarMock l_car2;
+    TeamMock l_team1;
+    TeamMock l_team2;
+    vector<reference_wrapper<ITeam>> l_teams{l_team1, l_team2};
+    vector<int> l_seq{2, 1};
+
+    EXPECT_CALL(l_team1, getCar()).WillRepeatedly(Return(&l_car1));
+    EXPECT_CALL(l_team2, getCar()).WillRepeatedly(Return(&l_car2));
+    EXPECT_CALL(l_team1, getId()).WillRepeatedly(Return(1));
+    EXPECT_CALL(l_team2, getId()).WillRepeatedly(Return(2));
+
+    EXPECT_CALL(l_car1, statusOfTire()).WillOnce(Return(100));
+    EXPECT_CALL(l_car1, statusOfEngine()).WillOnce(Return(100));
+    EXPECT_CALL(l_car1, statusOfSuspension()).WillOnce(Return(100));
+    EXPECT_CALL(l_car1, qualityOfEngine()).WillOnce(Return(EngineQuality::High));
+    EXPECT_CALL(l_car1, handling()).WillOnce(Return(Handling::Bad));
+
+    EXPECT_CALL(l_car2, statusOfTire()).WillOnce(Return(100));
+    EXPECT_CALL(l_car2, statusOfEngine()).WillOnce(Return(100));
+    EXPECT_CALL(l_car2, statusOfSuspension()).WillOnce(Return(100));
+    EXPECT_CALL(l_car2, qualityOfEngine()).WillOnce(Return(EngineQuality::High));
+    EXPECT_CALL(l_car2, handling()).WillOnce(Return(Handling::Good));
+
+    EXPECT_CALL(m_trackMock, getLength()).WillOnce(Return(500));
+    EXPECT_CALL(m_trackMock, getTurns()).WillOnce(Return(6));
+
+    ASSERT_EQ(l_seq, m_race.run(l_teams, m_trackMock));
+
+}
 
