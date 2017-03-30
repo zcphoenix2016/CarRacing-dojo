@@ -52,11 +52,17 @@ class RaceCalcTimeTestSuite
       public ::testing::WithParamInterface<RaceCalcTimeTestParams>
       {};
 
-INSTANTIATE_TEST_CASE_P(test_RaceCalcTimeInDifferentParams,
+INSTANTIATE_TEST_CASE_P(test_RaceCalcTimeWithDifferentParams,
                         RaceCalcTimeTestSuite,
                         ::testing::Values(
                             RaceCalcTimeTestParams{ENGINEQUALITY_HIGH, HANDLING_GOOD, {500, 6}, 28.0},
-                            RaceCalcTimeTestParams{ENGINEQUALITY_LOW, HANDLING_GOOD, {500, 6}, 33.0}));
+                            RaceCalcTimeTestParams{ENGINEQUALITY_LOW, HANDLING_GOOD, {500, 6}, 33.0},
+                            RaceCalcTimeTestParams{ENGINEQUALITY_HIGH, HANDLING_BAD, {500, 6}, 34.0},
+                            RaceCalcTimeTestParams{ENGINEQUALITY_LOW, HANDLING_BAD, {500, 6}, 39.0},
+                            RaceCalcTimeTestParams{ENGINEQUALITY_HIGH, HANDLING_GOOD, {1000, 3}, 51.5},
+                            RaceCalcTimeTestParams{ENGINEQUALITY_LOW, HANDLING_GOOD, {1000, 3}, 61.5},
+                            RaceCalcTimeTestParams{ENGINEQUALITY_HIGH, HANDLING_BAD, {1000, 3}, 54.5},
+                            RaceCalcTimeTestParams{ENGINEQUALITY_LOW, HANDLING_BAD, {1000, 3}, 64.5}));
 
 TEST_P(RaceCalcTimeTestSuite, RaceCalcTimeInDifferentParams)
 {
