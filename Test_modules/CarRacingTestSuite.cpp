@@ -33,28 +33,39 @@ TEST_F(CarRacingTestSuite, fullyPreparedCarShouldBeAdmitted)
     ASSERT_TRUE(m_race.validate(m_carMock));
 }
 
-TEST_F(CarRacingTestSuite, testRaceTimeForCarWithHighEngineWithGoodHandlingOnTrack1)
+struct TrackParams
 {
-    const float l_expectTime = 28.0;
+    int length;
+    int turns;
+};
 
-    EXPECT_CALL(m_carMock, qualityOfEngine()).WillOnce(Return(ENGINEQUALITY_HIGH));
-    EXPECT_CALL(m_carMock, handling()).WillOnce(Return(HANDLING_GOOD));
-    EXPECT_CALL(m_trackMock, getLength()).WillOnce(Return(500));
-    EXPECT_CALL(m_trackMock, getTurns()).WillOnce(Return(6));
+struct RaceCalcTimeTestParams
+{
+    ENGINEQUALITY engineQuality;
+    HANDLING      handling;
+    TrackParams   trackParams;
+    float         expectedTime;
+};
 
-    ASSERT_EQ(l_expectTime, m_race.calcTime(m_carMock, m_trackMock));
+class RaceCalcTimeTestSuite
+    : public CarRacingTestSuite,
+      public ::testing::WithParamInterface<RaceCalcTimeTestParams>
+      {};
+
+INSTANTIATE_TEST_CASE_P(test_RaceCalcTimeInDifferentParams,
+                        RaceCalcTimeTestSuite,
+                        ::testing::Values(
+                            RaceCalcTimeTestParams{ENGINEQUALITY_HIGH, HANDLING_GOOD, {500, 6}, 28.0},
+                            RaceCalcTimeTestParams{ENGINEQUALITY_LOW, HANDLING_GOOD, {500, 6}, 33.0}));
+
+TEST_P(RaceCalcTimeTestSuite, RaceCalcTimeInDifferentParams)
+{
+    EXPECT_CALL(m_carMock, qualityOfEngine()).WillOnce(Return(GetParam().engineQuality));
+    EXPECT_CALL(m_carMock, handling()).WillOnce(Return(GetParam().handling));
+    EXPECT_CALL(m_trackMock, getLength()).WillOnce(Return(GetParam().trackParams.length));
+    EXPECT_CALL(m_trackMock, getTurns()).WillOnce(Return(GetParam().trackParams.turns));
+
+    ASSERT_EQ(GetParam().expectedTime, m_race.calcTime(m_carMock, m_trackMock));
 }
 
-
-TEST_F(CarRacingTestSuite, testRaceTimeForCarWithLowEngineWithGoodHandlingOnTrack1)
-{
-    const float l_expectTime = 33.0;
-
-    EXPECT_CALL(m_carMock, qualityOfEngine()).WillOnce(Return(ENGINEQUALITY_LOW));
-    EXPECT_CALL(m_carMock, handling()).WillOnce(Return(HANDLING_GOOD));
-    EXPECT_CALL(m_trackMock, getLength()).WillOnce(Return(500));
-    EXPECT_CALL(m_trackMock, getTurns()).WillOnce(Return(6));
-
-    ASSERT_EQ(l_expectTime, m_race.calcTime(m_carMock, m_trackMock));
-}
 
