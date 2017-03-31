@@ -8,8 +8,6 @@
 #include <functional>
 
 using ::testing::Return;
-using ::testing::ReturnRef;
-using namespace std;
 
 class CarRacingTestSuite : public ::testing::Test
 {
@@ -61,13 +59,13 @@ INSTANTIATE_TEST_CASE_P(test_RaceCalcTimeWithDifferentParams,
                         RaceCalcTimeTestSuite,
                         ::testing::Values(
                             RaceCalcTimeTestParams{EngineQuality::High, Handling::Good, {500, 6}, 28.0},
-                            RaceCalcTimeTestParams{EngineQuality::Low, Handling::Good, {500, 6}, 33.0},
-                            RaceCalcTimeTestParams{EngineQuality::High, Handling::Bad, {500, 6}, 34.0},
-                            RaceCalcTimeTestParams{EngineQuality::Low, Handling::Bad, {500, 6}, 39.0},
+                            RaceCalcTimeTestParams{EngineQuality::Low,  Handling::Good, {500, 6}, 33.0},
+                            RaceCalcTimeTestParams{EngineQuality::High, Handling::Bad,  {500, 6}, 34.0},
+                            RaceCalcTimeTestParams{EngineQuality::Low,  Handling::Bad,  {500, 6}, 39.0},
                             RaceCalcTimeTestParams{EngineQuality::High, Handling::Good, {1000, 3}, 51.5},
-                            RaceCalcTimeTestParams{EngineQuality::Low, Handling::Good, {1000, 3}, 61.5},
-                            RaceCalcTimeTestParams{EngineQuality::High, Handling::Bad, {1000, 3}, 54.5},
-                            RaceCalcTimeTestParams{EngineQuality::Low, Handling::Bad, {1000, 3}, 64.5}));
+                            RaceCalcTimeTestParams{EngineQuality::Low,  Handling::Good, {1000, 3}, 61.5},
+                            RaceCalcTimeTestParams{EngineQuality::High, Handling::Bad,  {1000, 3}, 54.5},
+                            RaceCalcTimeTestParams{EngineQuality::Low,  Handling::Bad,  {1000, 3}, 64.5}));
 
 TEST_P(RaceCalcTimeTestSuite, RaceCalcTimeInDifferentParams)
 {
@@ -85,28 +83,28 @@ TEST_F(CarRacingTestSuite, TeamWithLessTimeShouldWin)
     CarMock l_car2;
     TeamMock l_team1;
     TeamMock l_team2;
-    vector<reference_wrapper<ITeam>> l_teams{l_team1, l_team2};
-    vector<int> l_seq{2, 1};
+    std::vector<ITeam*> l_teams{&l_team1, &l_team2};
+    std::vector<int> l_seq{2, 1};
 
     EXPECT_CALL(l_team1, getCar()).WillRepeatedly(Return(&l_car1));
     EXPECT_CALL(l_team2, getCar()).WillRepeatedly(Return(&l_car2));
     EXPECT_CALL(l_team1, getId()).WillRepeatedly(Return(1));
     EXPECT_CALL(l_team2, getId()).WillRepeatedly(Return(2));
 
-    EXPECT_CALL(l_car1, statusOfTire()).WillOnce(Return(100));
-    EXPECT_CALL(l_car1, statusOfEngine()).WillOnce(Return(100));
-    EXPECT_CALL(l_car1, statusOfSuspension()).WillOnce(Return(100));
+    //EXPECT_CALL(l_car1, statusOfTire()).WillOnce(Return(100));
+    //EXPECT_CALL(l_car1, statusOfEngine()).WillOnce(Return(100));
+    //EXPECT_CALL(l_car1, statusOfSuspension()).WillOnce(Return(100));
     EXPECT_CALL(l_car1, qualityOfEngine()).WillOnce(Return(EngineQuality::High));
     EXPECT_CALL(l_car1, handling()).WillOnce(Return(Handling::Bad));
 
-    EXPECT_CALL(l_car2, statusOfTire()).WillOnce(Return(100));
-    EXPECT_CALL(l_car2, statusOfEngine()).WillOnce(Return(100));
-    EXPECT_CALL(l_car2, statusOfSuspension()).WillOnce(Return(100));
+    //EXPECT_CALL(l_car2, statusOfTire()).WillOnce(Return(100));
+    //EXPECT_CALL(l_car2, statusOfEngine()).WillOnce(Return(100));
+    //EXPECT_CALL(l_car2, statusOfSuspension()).WillOnce(Return(100));
     EXPECT_CALL(l_car2, qualityOfEngine()).WillOnce(Return(EngineQuality::High));
     EXPECT_CALL(l_car2, handling()).WillOnce(Return(Handling::Good));
 
-    EXPECT_CALL(m_trackMock, getLength()).WillOnce(Return(500));
-    EXPECT_CALL(m_trackMock, getTurns()).WillOnce(Return(6));
+    EXPECT_CALL(m_trackMock, getLength()).WillRepeatedly(Return(500));
+    EXPECT_CALL(m_trackMock, getTurns()).WillRepeatedly(Return(6));
 
     ASSERT_EQ(l_seq, m_race.run(l_teams, m_trackMock));
 

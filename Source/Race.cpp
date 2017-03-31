@@ -1,30 +1,25 @@
 #include "Race.hpp"
 #include "ICar.hpp"
 #include "ITrack.hpp"
+#include "ITeam.hpp"
+#include <utility>
+#include <algorithm>
 
-vector<int> Race::run(const vector<reference_wrapper<ITeam>>& p_teams, const ITrack& p_track)
+std::vector<int> Race::run(const std::vector<ITeam*>& p_teams, const ITrack& p_track)
 {
-    /*
-    vector<pair<int, int>> l_vecSeq;
+    std::vector<std::pair<int, float>> l_seq;
 
-    for_each(p_teams.begin(), p_teams.end(),
-             [&](auto p){ l_vecSeq.push_back(make_pair(p->getId(), p->getTotalTime()));});
+    std::for_each(p_teams.begin(), p_teams.end(),
+                  [&](auto p_team){l_seq.push_back(std::make_pair(p_team->getId(), this->calcTime(*(p_team->getCar()), p_track)));});
 
-    sort(l_vecSeq.begin(), l_vecSeq.end(),
-         [](auto p1, auto p2){ return p1.second < p2.second;});
+    std::sort(l_seq.begin(), l_seq.end(),
+              [](auto p_pair1, auto p_pair2){ return p_pair1.second < p_pair2.second;});
 
-    vector<int> l_res;
-    for_each(l_vecSeq.begin(), l_vecSeq.end(),
-             [&](auto p){ l_res.push_back(p.first);});
+    std::vector<int> l_res;
+    std::for_each(l_seq.begin(), l_seq.end(),
+             [&](auto p_pair){l_res.push_back(p_pair.first);});
 
-    return move(l_res);*/
-    vector<pair<int, int>> l_vecSeq;
-    vector<reference_wrapper<ITeam>>& l_teams;
-    for_each(auto)
-    validate()
-    for_each(p_teams.begin(), p_teams.end(),
-             [&](auto p){ l_vecSeq.push_back(make_pair(p->getId(), calcTime()));});
-
+    return l_res;
 }
 
 bool Race::validate(const ICar& p_car)
