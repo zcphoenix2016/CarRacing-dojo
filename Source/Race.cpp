@@ -4,9 +4,23 @@
 #include "ITeam.hpp"
 #include <utility>
 #include <algorithm>
+#include <stdexcept>
 
 std::vector<unsigned int> Race::run(const std::vector<ITeam*>& p_teams, const ITrack& p_track)
 {
+    std::vector<ITeam*> l_validTeams;
+    std::for_each(p_teams.begin(), p_teams.end(),
+                  [&](auto p_team){
+                                      if(this->validate(*(p_team->getCar())))
+                                      {
+                                          l_validTeams.push_back(p_team);
+                                      }
+                                  });
+    if(2 > l_validTeams.size())
+    {
+        throw std::out_of_range("Less than 2 valid teams.");
+    }
+
     std::vector<std::pair<unsigned int, float>> l_seq;
 
     std::for_each(p_teams.begin(), p_teams.end(),

@@ -6,8 +6,10 @@
 #include <vector>
 #include "TeamMock.hpp"
 #include <functional>
+#include <stdexcept>
 
 using ::testing::Return;
+using ::testing::AnyNumber;
 
 struct CarStatus
 {
@@ -24,28 +26,27 @@ public:
     Race      m_race;
     TrackMock m_trackMock{};
     CarMock   m_carMock{};
-    CarStatus m_carStatus{};
+    CarStatus m_carStatus{100, 100, 100};
 
 };
 
 void CarRacingTestSuite::setExpectionForCarStatus(const CarMock& p_car, const CarStatus& p_status)
 {
-    EXPECT_CALL(p_car, statusOfTire()).WillOnce(Return(p_status.tire));
-    EXPECT_CALL(p_car, statusOfEngine()).WillOnce(Return(p_status.engine));
-    EXPECT_CALL(p_car, statusOfSuspension()).WillOnce(Return(p_status.suspension));
+    EXPECT_CALL(p_car, statusOfTire()).Times(AnyNumber()).WillRepeatedly(Return(p_status.tire));
+    EXPECT_CALL(p_car, statusOfEngine()).Times(AnyNumber()).WillRepeatedly(Return(p_status.engine));
+    EXPECT_CALL(p_car, statusOfSuspension()).Times(AnyNumber()).WillRepeatedly(Return(p_status.suspension));
 }
 
 TEST_F(CarRacingTestSuite, notFullyPreparedCarShouldNotJoinTheRace)
 {
-    m_carStatus = {100, 100, 20};
-    setExpectionForCarStatus(m_carMock, m_carStatus);
+    CarStatus l_carStatus = {20, 100, 100};
+    setExpectionForCarStatus(m_carMock, l_carStatus);
 
     ASSERT_FALSE(m_race.validate(m_carMock));
 }
 
 TEST_F(CarRacingTestSuite, fullyPreparedCarShouldBeAdmitted)
 {
-    m_carStatus = {100, 100, 100};
     setExpectionForCarStatus(m_carMock, m_carStatus);
 
     ASSERT_TRUE(m_race.validate(m_carMock));
@@ -92,12 +93,26 @@ TEST_P(RaceCalcTimeTestSuite, RaceCalcTimeInDifferentParams)
     ASSERT_EQ(GetParam().expectedTime, m_race.calcTime(m_carMock, m_trackMock));
 }
 
+TEST_F(CarRacingTestSuite, numOfValidCarsShouldNotBeLessThanTwo)
+{
+    CarMock l_car1, l_car2;
+    TeamMock l_team1, l_team2;
+    CarStatus l_carStatus{100, 20, 90};
+    std::vector<ITeam*> l_teams{&l_team1, &l_team2};
+
+    setExpectionForCarStatus(l_car1, m_carStatus);
+    setExpectionForCarStatus(l_car2, l_carStatus);
+
+    EXPECT_CALL(l_team1, getCar()).WillRepeatedly(Return(&l_car1));
+    EXPECT_CALL(l_team2, getCar()).WillRepeatedly(Return(&l_car2));
+
+    ASSERT_THROW(m_race.run(l_teams, m_trackMock), std::out_of_range);
+}
+
 TEST_F(CarRacingTestSuite, TeamWithLessTimeShouldWin)
 {
-    CarMock l_car1;
-    CarMock l_car2;
-    TeamMock l_team1;
-    TeamMock l_team2;
+    CarMock l_car1, l_car2;
+    TeamMock l_team1, l_team2;
     std::vector<ITeam*> l_teams{&l_team1, &l_team2};
     std::vector<unsigned int> l_seq{2, 1};
 
@@ -106,15 +121,12 @@ TEST_F(CarRacingTestSuite, TeamWithLessTimeShouldWin)
     EXPECT_CALL(l_team1, getId()).WillRepeatedly(Return(1));
     EXPECT_CALL(l_team2, getId()).WillRepeatedly(Return(2));
 
-    //EXPECT_CALL(l_car1, statusOfTire()).WillOnce(Return(100));
-    //EXPECT_CALL(l_car1, statusOfEngine()).WillOnce(Return(100));
-    //EXPECT_CALL(l_car1, statusOfSuspension()).WillOnce(Return(100));
+    setExpectionForCarStatus(l_car1, m_carStatus);
+    setExpectionForCarStatus(l_car2, m_carStatus);
+
     EXPECT_CALL(l_car1, qualityOfEngine()).WillOnce(Return(EngineQuality::High));
     EXPECT_CALL(l_car1, handling()).WillOnce(Return(Handling::Bad));
 
-    //EXPECT_CALL(l_car2, statusOfTire()).WillOnce(Return(100));
-    //EXPECT_CALL(l_car2, statusOfEngine()).WillOnce(Return(100));
-    //EXPECT_CALL(l_car2, statusOfSuspension()).WillOnce(Return(100));
     EXPECT_CALL(l_car2, qualityOfEngine()).WillOnce(Return(EngineQuality::High));
     EXPECT_CALL(l_car2, handling()).WillOnce(Return(Handling::Good));
 
