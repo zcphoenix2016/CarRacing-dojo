@@ -44,7 +44,7 @@ std::vector<unsigned int> Race::race(const std::vector<ITeam*>& p_teams, const I
 
 std::vector<unsigned int> Race::run(const std::vector<ITeam*>& p_teams, const ITrack& p_track)
 {
-    std::vector<ITeam*> l_validTeams{extractValidTeams(p_teams)};
+    std::vector<ITeam*> l_validTeams = extractValidTeams(p_teams);
 
     if(2 > l_validTeams.size() or 6 < l_validTeams.size())
     {
