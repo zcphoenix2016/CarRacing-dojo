@@ -51,7 +51,7 @@ std::vector<unsigned int> Race::run(const std::vector<ITeam*>& p_teams, const IT
         throw std::out_of_range("Number of valid teams is out of range.");
     }
 
-    return race(p_teams, p_track);
+    return race(l_validTeams, p_track);
 }
 
 bool Race::validate(const ICar& p_car)
