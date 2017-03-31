@@ -6,16 +6,25 @@
 #include <algorithm>
 #include <stdexcept>
 
-std::vector<unsigned int> Race::run(const std::vector<ITeam*>& p_teams, const ITrack& p_track)
+std::vector<ITeam*> Race::extractValidTeams(const std::vector<ITeam*>& p_teams)
 {
     std::vector<ITeam*> l_validTeams;
     std::for_each(p_teams.begin(), p_teams.end(),
-                  [&](auto p_team){
-                                      if(this->validate(*(p_team->getCar())))
-                                      {
-                                          l_validTeams.push_back(p_team);
-                                      }
-                                  });
+                  [&](auto p_team)
+                     {
+                         if(this->validate(*(p_team->getCar())))
+                         {
+                             l_validTeams.push_back(p_team);
+                         }
+                     });
+
+    return std::move(l_validTeams);
+}
+
+std::vector<unsigned int> Race::run(const std::vector<ITeam*>& p_teams, const ITrack& p_track)
+{
+    std::vector<ITeam*> l_validTeams{extractValidTeams(p_teams)};
+
     if(2 > l_validTeams.size() or 6 < l_validTeams.size())
     {
         throw std::out_of_range("Number of valid teams is out of range.");

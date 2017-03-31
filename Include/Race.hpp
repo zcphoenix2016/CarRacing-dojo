@@ -12,4 +12,7 @@ public:
     std::vector<unsigned int> run(const std::vector<ITeam*>&, const ITrack&);
     bool validate(const ICar&);
     float calcTime(const ICar&, const ITrack&);
+
+private:
+    std::vector<ITeam*> extractValidTeams(const std::vector<ITeam*>&);
 };
