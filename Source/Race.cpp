@@ -16,9 +16,9 @@ std::vector<unsigned int> Race::run(const std::vector<ITeam*>& p_teams, const IT
                                           l_validTeams.push_back(p_team);
                                       }
                                   });
-    if(2 > l_validTeams.size())
+    if(2 > l_validTeams.size() or 6 < l_validTeams.size())
     {
-        throw std::out_of_range("Less than 2 valid teams.");
+        throw std::out_of_range("Number of valid teams is out of range.");
     }
 
     std::vector<std::pair<unsigned int, float>> l_seq;

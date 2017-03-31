@@ -109,6 +109,31 @@ TEST_F(CarRacingTestSuite, numOfValidCarsShouldNotBeLessThanTwo)
     ASSERT_THROW(m_race.run(l_teams, m_trackMock), std::out_of_range);
 }
 
+TEST_F(CarRacingTestSuite, numOfValidCarsShouldNotBeMoreThanSix)
+{
+    CarMock l_car1, l_car2, l_car3, l_car4, l_car5, l_car6, l_car7;
+    TeamMock l_team1, l_team2, l_team3, l_team4, l_team5, l_team6, l_team7;
+    std::vector<ITeam*> l_teams{&l_team1, &l_team2, &l_team3, &l_team4, &l_team5, &l_team6, &l_team7};
+
+    setExpectionForCarStatus(l_car1, m_carStatus);
+    setExpectionForCarStatus(l_car2, m_carStatus);
+    setExpectionForCarStatus(l_car3, m_carStatus);
+    setExpectionForCarStatus(l_car4, m_carStatus);
+    setExpectionForCarStatus(l_car5, m_carStatus);
+    setExpectionForCarStatus(l_car6, m_carStatus);
+    setExpectionForCarStatus(l_car7, m_carStatus);
+
+    EXPECT_CALL(l_team1, getCar()).WillRepeatedly(Return(&l_car1));
+    EXPECT_CALL(l_team2, getCar()).WillRepeatedly(Return(&l_car2));
+    EXPECT_CALL(l_team3, getCar()).WillRepeatedly(Return(&l_car3));
+    EXPECT_CALL(l_team4, getCar()).WillRepeatedly(Return(&l_car4));
+    EXPECT_CALL(l_team5, getCar()).WillRepeatedly(Return(&l_car5));
+    EXPECT_CALL(l_team6, getCar()).WillRepeatedly(Return(&l_car6));
+    EXPECT_CALL(l_team7, getCar()).WillRepeatedly(Return(&l_car7));
+
+    ASSERT_THROW(m_race.run(l_teams, m_trackMock), std::out_of_range);
+}
+
 TEST_F(CarRacingTestSuite, TeamWithLessTimeShouldWin)
 {
     CarMock l_car1, l_car2;
