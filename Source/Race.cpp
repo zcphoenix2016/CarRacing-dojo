@@ -21,6 +21,27 @@ std::vector<ITeam*> Race::extractValidTeams(const std::vector<ITeam*>& p_teams)
     return std::move(l_validTeams);
 }
 
+std::vector<unsigned int> Race::race(const std::vector<ITeam*>& p_teams, const ITrack& p_track)
+{
+    std::vector<std::pair<unsigned int, float>> l_seq;
+
+    std::for_each(p_teams.begin(), p_teams.end(),
+                  [&](auto p_team)
+                      {
+                          l_seq.push_back(std::make_pair(p_team->getId(),
+                                                         this->calcTime(*(p_team->getCar()), p_track)));
+                      });
+
+    std::sort(l_seq.begin(), l_seq.end(),
+              [](auto p_pair1, auto p_pair2){return p_pair1.second < p_pair2.second;});
+
+    std::vector<unsigned int> l_res;
+    std::for_each(l_seq.begin(), l_seq.end(),
+             [&](auto p_pair){l_res.push_back(p_pair.first);});
+
+    return l_res;
+}
+
 std::vector<unsigned int> Race::run(const std::vector<ITeam*>& p_teams, const ITrack& p_track)
 {
     std::vector<ITeam*> l_validTeams{extractValidTeams(p_teams)};
@@ -30,19 +51,7 @@ std::vector<unsigned int> Race::run(const std::vector<ITeam*>& p_teams, const IT
         throw std::out_of_range("Number of valid teams is out of range.");
     }
 
-    std::vector<std::pair<unsigned int, float>> l_seq;
-
-    std::for_each(p_teams.begin(), p_teams.end(),
-                  [&](auto p_team){l_seq.push_back(std::make_pair(p_team->getId(), this->calcTime(*(p_team->getCar()), p_track)));});
-
-    std::sort(l_seq.begin(), l_seq.end(),
-              [](auto p_pair1, auto p_pair2){ return p_pair1.second < p_pair2.second;});
-
-    std::vector<unsigned int> l_res;
-    std::for_each(l_seq.begin(), l_seq.end(),
-             [&](auto p_pair){l_res.push_back(p_pair.first);});
-
-    return l_res;
+    return race(p_teams, p_track);
 }
 
 bool Race::validate(const ICar& p_car)

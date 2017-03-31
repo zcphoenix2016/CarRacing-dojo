@@ -15,4 +15,5 @@ public:
 
 private:
     std::vector<ITeam*> extractValidTeams(const std::vector<ITeam*>&);
+    std::vector<unsigned int> race(const std::vector<ITeam*>&, const ITrack&);
 };
