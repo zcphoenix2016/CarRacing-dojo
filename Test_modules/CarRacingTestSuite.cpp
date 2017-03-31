@@ -9,29 +9,44 @@
 
 using ::testing::Return;
 
+struct CarStatus
+{
+    int tire;
+    int engine;
+    int suspension;
+};
+
 class CarRacingTestSuite : public ::testing::Test
 {
 public:
-    CarMock m_carMock{};
-    Race m_race;
+    void setExpectionForCarStatus(const CarStatus&);
+
+    Race      m_race;
     TrackMock m_trackMock{};
+    CarMock   m_carMock{};
+    CarStatus m_carStatus{};
 
 };
 
+void CarRacingTestSuite::setExpectionForCarStatus(const CarStatus& p_status)
+{
+    EXPECT_CALL(m_carMock, statusOfTire()).WillOnce(Return(p_status.tire));
+    EXPECT_CALL(m_carMock, statusOfEngine()).WillOnce(Return(p_status.engine));
+    EXPECT_CALL(m_carMock, statusOfSuspension()).WillOnce(Return(p_status.suspension));
+}
+
 TEST_F(CarRacingTestSuite, notFullyPreparedCarShouldNotJoinTheRace)
 {
-    EXPECT_CALL(m_carMock, statusOfTire()).WillOnce(Return(100));
-    EXPECT_CALL(m_carMock, statusOfEngine()).WillOnce(Return(100));
-    EXPECT_CALL(m_carMock, statusOfSuspension()).WillOnce(Return(20));
+    m_carStatus = {100, 100, 20};
+    setExpectionForCarStatus(m_carStatus);
 
     ASSERT_FALSE(m_race.validate(m_carMock));
 }
 
 TEST_F(CarRacingTestSuite, fullyPreparedCarShouldBeAdmitted)
 {
-    EXPECT_CALL(m_carMock, statusOfTire()).WillOnce(Return(100));
-    EXPECT_CALL(m_carMock, statusOfEngine()).WillOnce(Return(100));
-    EXPECT_CALL(m_carMock, statusOfSuspension()).WillOnce(Return(100));
+    m_carStatus = {100, 100, 100};
+    setExpectionForCarStatus(m_carStatus);
 
     ASSERT_TRUE(m_race.validate(m_carMock));
 }
