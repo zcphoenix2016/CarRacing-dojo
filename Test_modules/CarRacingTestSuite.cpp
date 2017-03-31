@@ -19,7 +19,7 @@ struct CarStatus
 class CarRacingTestSuite : public ::testing::Test
 {
 public:
-    void setExpectionForCarStatus(const CarStatus&);
+    void setExpectionForCarStatus(const CarMock&, const CarStatus&);
 
     Race      m_race;
     TrackMock m_trackMock{};
@@ -28,17 +28,17 @@ public:
 
 };
 
-void CarRacingTestSuite::setExpectionForCarStatus(const CarStatus& p_status)
+void CarRacingTestSuite::setExpectionForCarStatus(const CarMock& p_car, const CarStatus& p_status)
 {
-    EXPECT_CALL(m_carMock, statusOfTire()).WillOnce(Return(p_status.tire));
-    EXPECT_CALL(m_carMock, statusOfEngine()).WillOnce(Return(p_status.engine));
-    EXPECT_CALL(m_carMock, statusOfSuspension()).WillOnce(Return(p_status.suspension));
+    EXPECT_CALL(p_car, statusOfTire()).WillOnce(Return(p_status.tire));
+    EXPECT_CALL(p_car, statusOfEngine()).WillOnce(Return(p_status.engine));
+    EXPECT_CALL(p_car, statusOfSuspension()).WillOnce(Return(p_status.suspension));
 }
 
 TEST_F(CarRacingTestSuite, notFullyPreparedCarShouldNotJoinTheRace)
 {
     m_carStatus = {100, 100, 20};
-    setExpectionForCarStatus(m_carStatus);
+    setExpectionForCarStatus(m_carMock, m_carStatus);
 
     ASSERT_FALSE(m_race.validate(m_carMock));
 }
@@ -46,7 +46,7 @@ TEST_F(CarRacingTestSuite, notFullyPreparedCarShouldNotJoinTheRace)
 TEST_F(CarRacingTestSuite, fullyPreparedCarShouldBeAdmitted)
 {
     m_carStatus = {100, 100, 100};
-    setExpectionForCarStatus(m_carStatus);
+    setExpectionForCarStatus(m_carMock, m_carStatus);
 
     ASSERT_TRUE(m_race.validate(m_carMock));
 }
@@ -99,7 +99,7 @@ TEST_F(CarRacingTestSuite, TeamWithLessTimeShouldWin)
     TeamMock l_team1;
     TeamMock l_team2;
     std::vector<ITeam*> l_teams{&l_team1, &l_team2};
-    std::vector<int> l_seq{2, 1};
+    std::vector<unsigned int> l_seq{2, 1};
 
     EXPECT_CALL(l_team1, getCar()).WillRepeatedly(Return(&l_car1));
     EXPECT_CALL(l_team2, getCar()).WillRepeatedly(Return(&l_car2));

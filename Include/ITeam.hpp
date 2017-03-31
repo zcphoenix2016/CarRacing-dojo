@@ -7,5 +7,5 @@ class ITeam
 public:
     virtual ~ITeam(){}
     virtual ICar* getCar() const = 0;
-    virtual int getId() const = 0;
+    virtual unsigned int getId() const = 0;
 };

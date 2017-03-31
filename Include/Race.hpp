@@ -9,7 +9,7 @@ class ITeam;
 class Race
 {
 public:
-    std::vector<int> run(const std::vector<ITeam*>&, const ITrack&);
+    std::vector<unsigned int> run(const std::vector<ITeam*>&, const ITrack&);
     bool validate(const ICar&);
     float calcTime(const ICar&, const ITrack&);
 };

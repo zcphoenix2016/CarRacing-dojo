@@ -5,9 +5,9 @@
 #include <utility>
 #include <algorithm>
 
-std::vector<int> Race::run(const std::vector<ITeam*>& p_teams, const ITrack& p_track)
+std::vector<unsigned int> Race::run(const std::vector<ITeam*>& p_teams, const ITrack& p_track)
 {
-    std::vector<std::pair<int, float>> l_seq;
+    std::vector<std::pair<unsigned int, float>> l_seq;
 
     std::for_each(p_teams.begin(), p_teams.end(),
                   [&](auto p_team){l_seq.push_back(std::make_pair(p_team->getId(), this->calcTime(*(p_team->getCar()), p_track)));});
@@ -15,7 +15,7 @@ std::vector<int> Race::run(const std::vector<ITeam*>& p_teams, const ITrack& p_t
     std::sort(l_seq.begin(), l_seq.end(),
               [](auto p_pair1, auto p_pair2){ return p_pair1.second < p_pair2.second;});
 
-    std::vector<int> l_res;
+    std::vector<unsigned int> l_res;
     std::for_each(l_seq.begin(), l_seq.end(),
              [&](auto p_pair){l_res.push_back(p_pair.first);});
 
@@ -25,8 +25,8 @@ std::vector<int> Race::run(const std::vector<ITeam*>& p_teams, const ITrack& p_t
 bool Race::validate(const ICar& p_car)
 {
     return (100 == p_car.statusOfTire() and
-             100 == p_car.statusOfEngine() and
-             100 == p_car.statusOfSuspension());
+            100 == p_car.statusOfEngine() and
+            100 == p_car.statusOfSuspension());
 }
 
 float Race::calcTime(const ICar& p_car, const ITrack& p_track)
